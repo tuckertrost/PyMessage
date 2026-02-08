@@ -1,5 +1,5 @@
-site_name: Example MkDocs Material Documentation for pypackage_template
-site_url: https://byuirpytooling.github.io/pypackage_template
+site_name: PyMessage Documentation
+site_url: https://yourusername.github.io/pymessage
 theme:
   name: material
   icon:
