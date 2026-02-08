@@ -3,13 +3,13 @@ requires = ["uv_build >= 0.9.21, <0.10.0"]
 build-backend = "uv_build"
 
 [project]
-name = "pypackage_template"
-version = "0.0.1"
-description = "A small example package managed with uv"
+name = "pymessage"
+version = "0.1.0"
+description = "Read iMessage data from iPhone backup SQLite databases and return clean pandas DataFrames"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "polars==1.37.0",
+    "pandas>=2.0.0",
 ]
 
 [project.optional-dependencies]
@@ -17,9 +17,6 @@ dev = [
     "pytest",
     "ruff",
 ]
-
-[project.scripts]
-my-uv-cli = "my_uv_package.cli:main"
 
 [tool.uv]
 # Here you can put uv-specific configuration if needed later
