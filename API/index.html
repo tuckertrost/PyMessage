@@ -1,0 +1,2818 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://yourusername.github.io/pymessage/API/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../code-examples/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>API Reference - PyMessage Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather+Sans:300,300i,400,400i,700,700i%7CRed+Hat+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Merriweather Sans";--md-code-font:"Red Hat Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PyMessage Documentation" class="md-header__button md-logo" aria-label="PyMessage Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M288 32c0 17.7 14.3 32 32 32h40c13.3 0 24 10.7 24 24s-10.7 24-24 24H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h328c48.6 0 88-39.4 88-88S408.6 0 360 0h-40c-17.7 0-32 14.3-32 32m64 352c0 17.7 14.3 32 32 32h32c53 0 96-43 96-96s-43-96-96-96H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32h-32c-17.7 0-32 14.3-32 32M128 512h40c48.6 0 88-39.4 88-88s-39.4-88-88-88H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h136c13.3 0 24 10.7 24 24s-10.7 24-24 24h-40c-17.7 0-32 14.3-32 32s14.3 32 32 32"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyMessage Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="deep-purple"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="deep-orange"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PyMessage Documentation" class="md-nav__button md-logo" aria-label="PyMessage Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M288 32c0 17.7 14.3 32 32 32h40c13.3 0 24 10.7 24 24s-10.7 24-24 24H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h328c48.6 0 88-39.4 88-88S408.6 0 360 0h-40c-17.7 0-32 14.3-32 32m64 352c0 17.7 14.3 32 32 32h32c53 0 96-43 96-96s-43-96-96-96H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32h-32c-17.7 0-32 14.3-32 32M128 512h40c48.6 0 88-39.4 88-88s-39.4-88-88-88H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h136c13.3 0 24 10.7 24 24s-10.7 24-24 24h-40c-17.7 0-32 14.3-32 32s14.3 32 32 32"/></svg>
+
+    </a>
+    PyMessage Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyMessage Documentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.messages.get_messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_messages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="get_messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list_conversations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list_conversations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.conversations.list_conversations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list_conversations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backup Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#find_backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.backups.find_backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_backups
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="find_backups">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_backup_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_backup_info
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.backups.get_backup_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_backup_info
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attachments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attachments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attachments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_attachments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_attachments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.attachments.get_attachments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_attachments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="get_attachments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resolve_attachment_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resolve_attachment_path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.attachments.resolve_attachment_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resolve_attachment_path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#utility-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utility Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Utility Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#convert_apple_timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        convert_apple_timestamp
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.schema.convert_apple_timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        convert_apple_timestamp
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="convert_apple_timestamp">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parse_reaction_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parse_reaction_type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.schema.parse_reaction_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parse_reaction_type
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="parse_reaction_type">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#normalize_phone_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        normalize_phone_number
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.utils.normalize_phone_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        normalize_phone_number
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="normalize_phone_number">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate_phone_variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_phone_variants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.utils.generate_phone_variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_phone_variants
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code-examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assets
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Assets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assets/readme/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Readme
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_messages
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.messages.get_messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_messages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="get_messages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list_conversations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list_conversations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.conversations.list_conversations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list_conversations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backup-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backup Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#find_backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.backups.find_backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        find_backups
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="find_backups">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_backup_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_backup_info
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.backups.get_backup_info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_backup_info
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attachments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attachments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attachments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get_attachments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_attachments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.attachments.get_attachments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_attachments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="get_attachments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resolve_attachment_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resolve_attachment_path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.attachments.resolve_attachment_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        resolve_attachment_path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#utility-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utility Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Utility Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#convert_apple_timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        convert_apple_timestamp
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.schema.convert_apple_timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        convert_apple_timestamp
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="convert_apple_timestamp">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parse_reaction_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parse_reaction_type
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.schema.parse_reaction_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        parse_reaction_type
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="parse_reaction_type">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#normalize_phone_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        normalize_phone_number
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.utils.normalize_phone_number" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        normalize_phone_number
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="normalize_phone_number">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generate_phone_variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_phone_variants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pymessage.utils.generate_phone_variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        generate_phone_variants
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="api-reference">API Reference</h1>
+<p>Complete API documentation for PyMessage functions.</p>
+<h2 id="core-functions">Core Functions</h2>
+<h3 id="get_messages">get_messages</h3>
+<p>Retrieve iMessage messages from iPhone backup database.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pymessage.messages.get_messages"></a>
+    <div class="doc doc-contents first">
+
+        <p>Retrieve iMessage messages from iPhone backup database.</p>
+<p>Query messages with optional filtering by phone numbers and date range.
+Returns a pandas DataFrame with message details, attachments, and reactions.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>backup_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to iPhone backup directory (mutually exclusive with db_path).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>db_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Direct path to chat.db file (mutually exclusive with backup_path).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>phone_numbers</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="list">list</span>[<span title="str">str</span>] | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Single phone number or list to filter conversations.
+Accepts various formats: "+1234567890", "(123) 456-7890", "email@example.com"</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>date_range</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="str">str</span> | <span title="datetime.datetime">datetime</span>, <span title="str">str</span> | <span title="datetime.datetime">datetime</span>] | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Tuple of (start, end) dates for filtering. Dates can be:
+- ISO format strings: "2024-01-01", "2024-12-31"
+- datetime objects
+If None, returns all messages.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>output_csv</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Optional path to export results as CSV.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>DataFrame with columns:</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>timestamp (pd.Timestamp): Message timestamp in UTC</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>read_at (pd.Timestamp | None): When message was read (None if unread)</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>sender (str): Phone number or email of sender</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>message_text (str): Text content of message</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>is_from_me (bool): True if sent by device owner</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>chat_id (str): Chat identifier</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>is_group_chat (bool): True if group conversation</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>attachment_path (str | None): Path to attachment file in backup</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>reaction_type (str | None): Type of reaction if this is a tapback</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>reaction_action (str | None): "add" or "remove" for reactions</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If both or neither of backup_path/db_path provided.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If date_range has invalid format.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If specified path doesn't exist.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get all messages from backup</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">get_messages</span><span class="p">(</span><span class="n">backup_path</span><span class="o">=</span><span class="s2">&quot;/path/to/backup&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get messages for specific contact</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">get_messages</span><span class="p">(</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="n">backup_path</span><span class="o">=</span><span class="s2">&quot;/path/to/backup&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="n">phone_numbers</span><span class="o">=</span><span class="s2">&quot;+1234567890&quot;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span><span class="p">)</span>
+</span></code></pre></div>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get messages in date range and export to CSV</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">get_messages</span><span class="p">(</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="n">db_path</span><span class="o">=</span><span class="s2">&quot;/path/to/chat.db&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="n">date_range</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;2024-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2024-12-31&quot;</span><span class="p">),</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>    <span class="n">output_csv</span><span class="o">=</span><span class="s2">&quot;messages.csv&quot;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">... </span><span class="p">)</span>
+</span></code></pre></div>
+
+
+    </div>
+
+</div><h3 id="list_conversations">list_conversations</h3>
+<p>List all conversations with summary statistics.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pymessage.conversations.list_conversations"></a>
+    <div class="doc doc-contents first">
+
+        <p>List all conversations with summary statistics.</p>
+<p>Returns metadata about each conversation including participant count,
+message count, and date range.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>backup_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to iPhone backup directory (mutually exclusive with db_path).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>db_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Direct path to chat.db file (mutually exclusive with backup_path).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>include_empty</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Include conversations with no messages (default False).</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>DataFrame with columns:</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>chat_id (str): Chat identifier</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>is_group_chat (bool): True if group conversation</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>participants (list[str]): List of phone numbers/emails</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>participant_count (int): Number of participants</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>message_count (int): Total messages in conversation</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>first_message (pd.Timestamp): Earliest message timestamp</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>last_message (pd.Timestamp): Most recent message timestamp</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>display_name (str | None): Chat display name if available</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If both or neither of backup_path/db_path provided.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If specified path doesn't exist.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">list_conversations</span><span class="p">(</span><span class="n">backup_path</span><span class="o">=</span><span class="s2">&quot;/path/to/backup&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Filter to group chats only</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">groups</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;is_group_chat&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sort by most active</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;message_count&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></code></pre></div>
+
+
+    </div>
+
+</div><h2 id="backup-management">Backup Management</h2>
+<h3 id="find_backups">find_backups</h3>
+<p>Scan default macOS location for iPhone backups.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pymessage.backups.find_backups"></a>
+    <div class="doc doc-contents first">
+
+        <p>Scan default macOS location for iPhone backups.</p>
+<p>Searches ~/Library/Application Support/MobileSync/Backup/ for backup
+directories and extracts metadata from each.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of backup metadata dictionaries, each containing:</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>path (Path): Absolute path to backup directory</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>device_name (str): Device name from Info.plist</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>last_backup (datetime): Last backup timestamp</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>ios_version (str): iOS version string</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>phone_number (str | None): Phone number if available</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>serial_number (str): Device serial number</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">backups</span> <span class="o">=</span> <span class="n">find_backups</span><span class="p">()</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">backup</span> <span class="ow">in</span> <span class="n">backups</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">backup</span><span class="p">[</span><span class="s1">&#39;device_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">backup</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="go">John&#39;s iPhone: /Users/user/Library/Application Support/MobileSync/Backup/abc123...</span>
+</span></code></pre></div>
+
+
+    </div>
+
+</div><h3 id="get_backup_info">get_backup_info</h3>
+<p>Extract metadata from iPhone backup directory.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pymessage.backups.get_backup_info"></a>
+    <div class="doc doc-contents first">
+
+        <p>Extract metadata from iPhone backup directory.</p>
+<p>Reads Info.plist and Manifest.plist to extract device information
+and backup details.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>backup_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to backup directory.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Dictionary with backup metadata:</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>path (Path): Absolute path to backup directory</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>device_name (str): Device name from Info.plist</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>last_backup (datetime): Last backup timestamp</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>ios_version (str): iOS version string</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>phone_number (str | None): Phone number if available</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>serial_number (str): Device serial number</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If backup_path doesn't exist.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If Info.plist is missing or malformed.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="n">get_backup_info</span><span class="p">(</span><span class="s2">&quot;/path/to/backup&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;device_name&quot;</span><span class="p">])</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">John&#39;s iPhone</span>
+</span></code></pre></div>
+
+
+    </div>
+
+</div><h2 id="attachments">Attachments</h2>
+<h3 id="get_attachments">get_attachments</h3>
+<p>Retrieve attachment metadata and file paths.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pymessage.attachments.get_attachments"></a>
+    <div class="doc doc-contents first">
+
+        <p>Retrieve attachment metadata and file paths.</p>
+<p>Returns information about all attachments in conversations,
+optionally filtered by phone numbers.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>backup_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Path to iPhone backup directory (mutually exclusive with db_path).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>db_path</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="pathlib.Path">Path</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Direct path to chat.db file (mutually exclusive with backup_path).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>phone_numbers</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> | <span title="list">list</span>[<span title="str">str</span>] | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Filter to attachments in these conversations.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>DataFrame with columns:</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>attachment_id (int): Attachment rowid</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>message_id (int): Associated message rowid</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>filename (str): Original filename</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>mime_type (str): MIME type (e.g., "image/jpeg")</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>file_size (int): Size in bytes</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>backup_path (str | None): Full path in backup if backup_path provided</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>timestamp (pd.Timestamp): Message timestamp</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.DataFrame">DataFrame</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>sender (str): Sender phone/email</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="ValueError">ValueError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If both or neither of backup_path/db_path provided.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="FileNotFoundError">FileNotFoundError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If specified path doesn't exist.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">get_attachments</span><span class="p">(</span><span class="n">backup_path</span><span class="o">=</span><span class="s2">&quot;/path/to/backup&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Filter to images only</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">images</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;mime_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;image/&quot;</span><span class="p">)]</span>
+</span></code></pre></div>
+
+
+    </div>
+
+</div><h3 id="resolve_attachment_path">resolve_attachment_path</h3>
+<p>Resolve attachment filename to actual path in backup.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pymessage.attachments.resolve_attachment_path"></a>
+    <div class="doc doc-contents first">
+
+        <p>Resolve attachment filename to actual path in backup.</p>
+<p>iPhone backups store files using SHA1 hash of domain and relative path:
+path = SHA1("MediaDomain-" + relative_path)
+Structure: backup_root/[first_2_hex]/[full_hash]</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>filename</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Relative filename from attachment table.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>backup_root</code>
+            </td>
+            <td>
+                  <code><span title="pathlib.Path">Path</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Root directory of backup.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pathlib.Path">Path</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Absolute path to attachment file, or None if not found.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="n">resolve_attachment_path</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">... </span>    <span class="s2">&quot;Library/SMS/Attachments/ab/12/IMG_1234.jpg&quot;</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/path/to/backup&quot;</span><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="go">/path/to/backup/41/41746ffc65924078eae42725c979305626f57cca</span>
+</span></code></pre></div>
+
+
+    </div>
+
+</div><h2 id="utility-functions">Utility Functions</h2>
+<h3 id="convert_apple_timestamp">convert_apple_timestamp</h3>
+<p>Convert Apple timestamp to pandas Timestamp.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pymessage.schema.convert_apple_timestamp"></a>
+    <div class="doc doc-contents first">
+
+        <p>Convert Apple timestamp to pandas Timestamp.</p>
+<p>Apple uses two timestamp formats:
+- Values &gt;= 1 trillion: nanoseconds since 2001-01-01
+- Values &lt; 1 trillion: seconds since 2001-01-01</p>
+<p>Zero values are treated as None (no timestamp).</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>timestamp</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span> | <span title="float">float</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Apple timestamp value, or None.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="pandas.Timestamp">Timestamp</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>pandas Timestamp object in UTC, or None if input is None/zero.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">convert_apple_timestamp</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</span></code></pre></div>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">convert_apple_timestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></code></pre></div>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Seconds format (older iOS)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">ts</span> <span class="o">=</span> <span class="n">convert_apple_timestamp</span><span class="p">(</span><span class="mi">629990400</span><span class="p">)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">ts</span><span class="o">.</span><span class="n">year</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="go">2020</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Nanoseconds format (modern iOS)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">ts</span> <span class="o">=</span> <span class="n">convert_apple_timestamp</span><span class="p">(</span><span class="mi">629990400000000000</span><span class="p">)</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">ts</span><span class="o">.</span><span class="n">year</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="go">2020</span>
+</span></code></pre></div>
+
+
+    </div>
+
+</div><h3 id="parse_reaction_type">parse_reaction_type</h3>
+<p>Parse reaction/tapback type from associated_message_type.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pymessage.schema.parse_reaction_type"></a>
+    <div class="doc doc-contents first">
+
+        <p>Parse reaction/tapback type from associated_message_type.</p>
+<p>Reactions are encoded as separate messages with specific type codes:
+- 2000-2007: Tapback added
+- 3000-3007: Tapback removed</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>associated_message_type</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Type code from message.associated_message_type.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Tuple of (reaction_type, action) where:</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>reaction_type: "loved", "liked", "disliked", "laughed",
+"emphasized", "questioned", or None</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="str">str</span> | None, <span title="str">str</span> | None]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <ul>
+<li>action: "add" or "remove" or None</li>
+</ul>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_reaction_type</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="go">(&#39;loved&#39;, &#39;add&#39;)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_reaction_type</span><span class="p">(</span><span class="mi">3001</span><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="go">(&#39;liked&#39;, &#39;remove&#39;)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_reaction_type</span><span class="p">(</span><span class="mi">2003</span><span class="p">)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="go">(&#39;laughed&#39;, &#39;add&#39;)</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_reaction_type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="go">(None, None)</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">parse_reaction_type</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="go">(None, None)</span>
+</span></code></pre></div>
+
+
+    </div>
+
+</div><h3 id="normalize_phone_number">normalize_phone_number</h3>
+<p>Normalize phone number to digits-only format.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pymessage.utils.normalize_phone_number"></a>
+    <div class="doc doc-contents first">
+
+        <p>Normalize phone number to digits-only format.</p>
+<p>Strips all non-digit characters except leading '+'. Email addresses
+(containing '@') are returned as-is.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>phone</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Phone number in any format, or email address.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Normalized phone number or email address.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_phone_number</span><span class="p">(</span><span class="s2">&quot;+1 (234) 567-8900&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="go">&#39;+12345678900&#39;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_phone_number</span><span class="p">(</span><span class="s2">&quot;(234) 567-8900&quot;</span><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="go">&#39;2345678900&#39;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_phone_number</span><span class="p">(</span><span class="s2">&quot;234-567-8900&quot;</span><span class="p">)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="go">&#39;2345678900&#39;</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_phone_number</span><span class="p">(</span><span class="s2">&quot;user@example.com&quot;</span><span class="p">)</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="go">&#39;user@example.com&#39;</span>
+</span></code></pre></div>
+
+
+    </div>
+
+</div><h3 id="generate_phone_variants">generate_phone_variants</h3>
+<p>Generate lookup variants for phone number matching.</p>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="pymessage.utils.generate_phone_variants"></a>
+    <div class="doc doc-contents first">
+
+        <p>Generate lookup variants for phone number matching.</p>
+<p>Creates multiple representations to match against database, handling
+variations in how iMessage stores contact identifiers. Special handling
+for US +1 country code.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>phone</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Normalized phone number or email address.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of variants to try for lookup. Email addresses return</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="list">list</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>single-item list.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">variants</span> <span class="o">=</span> <span class="n">generate_phone_variants</span><span class="p">(</span><span class="s2">&quot;+12345678900&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">set</span><span class="p">(</span><span class="n">variants</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s2">&quot;+12345678900&quot;</span><span class="p">,</span> <span class="s2">&quot;12345678900&quot;</span><span class="p">,</span> <span class="s2">&quot;2345678900&quot;</span><span class="p">}</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">True</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">variants</span> <span class="o">=</span> <span class="n">generate_phone_variants</span><span class="p">(</span><span class="s2">&quot;2345678900&quot;</span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;+12345678900&quot;</span> <span class="ow">in</span> <span class="n">variants</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="go">True</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;12345678900&quot;</span> <span class="ow">in</span> <span class="n">variants</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="go">True</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">generate_phone_variants</span><span class="p">(</span><span class="s2">&quot;user@example.com&quot;</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="go">[&#39;user@example.com&#39;]</span>
+</span></code></pre></div>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 J. Hathaway
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.youtube.com/@byuidss" target="_blank" rel="noopener" title="www.youtube.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M549.7 124.1c-6.2-23.7-24.8-42.3-48.3-48.6C458.9 64 288.1 64 288.1 64S117.3 64 74.7 75.5c-23.5 6.3-42 24.9-48.3 48.6C15 167 15 256.4 15 256.4s0 89.4 11.4 132.3c6.3 23.6 24.8 41.5 48.3 47.8C117.3 448 288.1 448 288.1 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zM232.2 337.6V175.2l142.7 81.2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/school/byu-idaho" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
