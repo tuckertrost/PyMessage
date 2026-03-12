@@ -1,9 +1,12 @@
 """Pytest fixtures for pymessage tests."""
 
+import shutil
 import sqlite3
 from pathlib import Path
 
 import pytest
+
+from pymessage.backups import Backup
 
 
 @pytest.fixture
@@ -29,6 +32,7 @@ def mock_chat_db(tmp_path: Path) -> Path:
             rowid INTEGER PRIMARY KEY,
             guid TEXT,
             text TEXT,
+            attributedBody BLOB,
             date INTEGER,
             date_read INTEGER,
             is_from_me INTEGER,
@@ -38,11 +42,12 @@ def mock_chat_db(tmp_path: Path) -> Path:
         )
     """)
 
-    # Create handle table
+    # Create handle table (includes uncanonicalized_id for contact_name lookup)
     cursor.execute("""
         CREATE TABLE handle (
             rowid INTEGER PRIMARY KEY,
-            id TEXT
+            id TEXT,
+            uncanonicalized_id TEXT
         )
     """)
 
@@ -88,10 +93,10 @@ def mock_chat_db(tmp_path: Path) -> Path:
         )
     """)
 
-    # Insert test handles (contacts)
-    cursor.execute("INSERT INTO handle VALUES (1, '+12345678900')")
-    cursor.execute("INSERT INTO handle VALUES (2, '+19876543210')")
-    cursor.execute("INSERT INTO handle VALUES (3, 'user@example.com')")
+    # Insert test handles (contacts) — uncanonicalized_id is the display version
+    cursor.execute("INSERT INTO handle VALUES (1, '+12345678900', '+12345678900')")
+    cursor.execute("INSERT INTO handle VALUES (2, '+19876543210', '+19876543210')")
+    cursor.execute("INSERT INTO handle VALUES (3, 'user@example.com', NULL)")
 
     # Insert test chats
     # Chat 1: 1-on-1 conversation
@@ -103,37 +108,65 @@ def mock_chat_db(tmp_path: Path) -> Path:
         "INSERT INTO chat VALUES (2, 'chat123456789', 'iMessage', 'Test Group')"
     )
 
+    # Build a realistic attributedBody blob for testing.
+    # Format: [prefix]NSString[5-byte preamble][length][utf-8 text][suffix]
+    attributed_body_text = b"Message from attributedBody"
+    attributed_body_blob = (
+        b"\x04\x0bstreamtyped\x81\xe8\x03"  # typedstream header
+        + b"\x00" * 20  # padding
+        + b"NSString"  # marker
+        + b"\x01\x94\x84\x01+"  # 5-byte preamble
+        + bytes([len(attributed_body_text)])  # 1-byte length
+        + attributed_body_text  # the actual text
+        + b"\x00" * 10  # trailing data
+    )
+
     # Insert test messages
     # Message 1: Regular text message (seconds format timestamp)
     cursor.execute("""
         INSERT INTO message VALUES (
-            1, 'guid1', 'Hello, world!', 629990400, 629990500, 0, 1, NULL, NULL
+            1, 'guid1', 'Hello, world!', NULL,
+            629990400, 629990500, 0, 1, NULL, NULL
         )
     """)
     # Message 2: Message from me (nanoseconds format timestamp)
     cursor.execute("""
         INSERT INTO message VALUES (
-            2, 'guid2', 'Reply message', 630000000000000000, 0, 1, NULL, NULL, NULL
+            2, 'guid2', 'Reply message', NULL,
+            630000000000000000, 0, 1, NULL, NULL, NULL
         )
     """)
     # Message 3: Group chat message
     cursor.execute("""
         INSERT INTO message VALUES (
-            3, 'guid3', 'Group message', 630100000, 0, 0, 2, NULL, NULL
+            3, 'guid3', 'Group message', NULL,
+            630100000, 0, 0, 2, NULL, NULL
         )
     """)
     # Message 4: Reaction to message 1 (loved)
     cursor.execute("""
         INSERT INTO message VALUES (
-            4, 'guid4', NULL, 630000100, 0, 0, 1, 2000, 'p:0/guid1'
+            4, 'guid4', NULL, NULL,
+            630000100, 0, 0, 1, 2000, 'p:0/guid1'
         )
     """)
     # Message 5: Message with attachment
     cursor.execute("""
         INSERT INTO message VALUES (
-            5, 'guid5', 'Photo attached', 630200000, 0, 0, 1, NULL, NULL
+            5, 'guid5', 'Photo attached', NULL,
+            630200000, 0, 0, 1, NULL, NULL
         )
     """)
+    # Message 6: NULL text with attributedBody (modern macOS/iOS format)
+    cursor.execute(
+        """
+        INSERT INTO message VALUES (
+            6, 'guid6', NULL, ?,
+            630300000, 0, 0, 1, NULL, NULL
+        )
+    """,
+        (attributed_body_blob,),
+    )
 
     # Insert test attachment
     cursor.execute("""
@@ -147,6 +180,7 @@ def mock_chat_db(tmp_path: Path) -> Path:
     cursor.execute("INSERT INTO chat_message_join VALUES (1, 2)")
     cursor.execute("INSERT INTO chat_message_join VALUES (1, 4)")
     cursor.execute("INSERT INTO chat_message_join VALUES (1, 5)")
+    cursor.execute("INSERT INTO chat_message_join VALUES (1, 6)")
     cursor.execute("INSERT INTO chat_message_join VALUES (2, 3)")
 
     # Link chats to handles (participants)
@@ -165,8 +199,8 @@ def mock_chat_db(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
-def mock_backup(tmp_path: Path, mock_chat_db: Path) -> Path:
-    """Create a minimal mock iPhone backup directory structure.
+def mock_backup(tmp_path: Path, mock_chat_db: Path) -> Backup:
+    """Create a minimal mock iPhone backup and return a Backup object.
 
     Creates the directory structure with chat.db at the correct SHA-1 path
     as it appears in real iPhone backups.
@@ -176,7 +210,7 @@ def mock_backup(tmp_path: Path, mock_chat_db: Path) -> Path:
         mock_chat_db: Path to mock chat database fixture.
 
     Returns:
-        Path to the backup root directory.
+        Backup object pointing to the mock backup directory.
     """
     backup_root = tmp_path / "mock_backup"
     backup_root.mkdir()
@@ -186,9 +220,14 @@ def mock_backup(tmp_path: Path, mock_chat_db: Path) -> Path:
     chat_db_dir.mkdir()
 
     # Copy mock chat.db to the expected location
-    import shutil
-
     chat_db_path = chat_db_dir / "3d0d7e5fb2ce288813306e4d4636395e047a3d28"
     shutil.copy(mock_chat_db, chat_db_path)
 
-    return backup_root
+    return Backup(
+        type="iphone",
+        path=backup_root,
+        device_name="Test iPhone",
+        last_backup=None,
+        ios_version=None,
+        phone_number=None,
+    )

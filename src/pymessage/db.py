@@ -13,38 +13,32 @@ from pymessage.schema import CHAT_DB_HASH_PATH
 class ChatDatabase:
     """Context manager for iMessage chat database connections.
 
-    Handles both direct database paths and iPhone backup directories,
-    automatically locating chat.db within backups using the known SHA-1 path.
+    Accepts a Backup object and opens the appropriate SQLite connection,
+    using read-only mode for macOS databases to avoid lock conflicts
+    with the Messages app.
 
     Examples:
-        >>> # Direct database path
-        >>> with ChatDatabase(db_path="/path/to/chat.db") as conn:
+        >>> backups = find_backups()
+        >>> with ChatDatabase(backups[0]) as conn:
         ...     cursor = conn.cursor()
         ...     cursor.execute("SELECT COUNT(*) FROM message")
         ...     print(cursor.fetchone()[0])
-
-        >>> # iPhone backup directory
-        >>> with ChatDatabase(backup_path="/path/to/backup") as conn:
-        ...     # chat.db automatically located
-        ...     cursor = conn.cursor()
     """
 
-    def __init__(
-        self,
-        db_path: Path | str | None = None,
-        backup_path: Path | str | None = None,
-    ) -> None:
+    def __init__(self, backup) -> None:
         """Initialize ChatDatabase context manager.
 
         Args:
-            db_path: Direct path to chat.db file (mutually exclusive with backup_path).
-            backup_path: Path to iPhone backup directory (mutually exclusive with db_path).
+            backup: A Backup object specifying the data source.
+                type="iphone" opens the chat.db inside the backup directory.
+                type="macos" opens the chat.db read-only.
 
         Raises:
-            ValueError: If both or neither of db_path/backup_path provided.
-            FileNotFoundError: If specified path doesn't exist.
+            ValueError: If backup.type is not "iphone" or "macos".
+            FileNotFoundError: If the database file cannot be found.
         """
-        self.resolved_db_path = validate_db_params(db_path, backup_path)
+        self.resolved_db_path = validate_db_params(backup)
+        self.is_macos = backup.type == "macos"
         self.conn: sqlite3.Connection | None = None
 
     def __enter__(self) -> sqlite3.Connection:
@@ -53,7 +47,13 @@ class ChatDatabase:
         Returns:
             Open SQLite connection to chat database.
         """
-        self.conn = sqlite3.connect(self.resolved_db_path)
+        if self.is_macos:
+            # Open read-only to avoid lock conflicts with Messages app
+            self.conn = sqlite3.connect(
+                f"file:{self.resolved_db_path}?mode=ro", uri=True
+            )
+        else:
+            self.conn = sqlite3.connect(self.resolved_db_path)
         # Enable row factory for easier access to results
         self.conn.row_factory = sqlite3.Row
         return self.conn
@@ -64,55 +64,37 @@ class ChatDatabase:
             self.conn.close()
 
 
-def validate_db_params(
-    db_path: Path | str | None, backup_path: Path | str | None
-) -> Path:
-    """Validate and resolve database parameters.
-
-    Ensures exactly one of db_path or backup_path is provided, converts to Path,
-    and validates existence.
+def validate_db_params(backup) -> Path:
+    """Validate a Backup object and return the resolved path to chat.db.
 
     Args:
-        db_path: Direct path to chat.db file.
-        backup_path: Path to iPhone backup directory.
+        backup: A Backup object with type "iphone" or "macos".
 
     Returns:
         Resolved Path object pointing to chat.db.
 
     Raises:
-        ValueError: If both or neither parameter provided.
-        FileNotFoundError: If specified path doesn't exist.
+        ValueError: If backup.type is not "iphone" or "macos".
+        FileNotFoundError: If the database cannot be located.
 
     Examples:
-        >>> path = validate_db_params(db_path="/path/to/chat.db", backup_path=None)
-        >>> path = validate_db_params(db_path=None, backup_path="/path/to/backup")
+        >>> backups = find_backups()
+        >>> path = validate_db_params(backups[0])
     """
-    if db_path and backup_path:
-        raise ValueError(
-            "Must provide exactly one of 'backup_path' or 'db_path', not both. "
-            "Use backup_path='/path/to/backup' for iPhone backups, or "
-            "db_path='/path/to/chat.db' for direct database access."
-        )
+    if backup.type == "macos":
+        return Path(backup.path)
 
-    if not db_path and not backup_path:
-        raise ValueError(
-            "Must provide either 'backup_path' or 'db_path'. "
-            "Use backup_path='/path/to/backup' for iPhone backups, or "
-            "db_path='/path/to/chat.db' for direct database access."
-        )
+    if backup.type == "iphone":
+        backup_path = Path(backup.path)
+        if not backup_path.exists():
+            raise FileNotFoundError(
+                f"Backup directory not found: {backup_path}"
+            )
+        return locate_chat_db(backup_path)
 
-    if db_path:
-        db_path = Path(db_path)
-        if not db_path.exists():
-            raise FileNotFoundError(f"Database file not found: {db_path}")
-        return db_path
-
-    # backup_path must be provided
-    backup_path = Path(backup_path)
-    if not backup_path.exists():
-        raise FileNotFoundError(f"Backup directory not found: {backup_path}")
-
-    return locate_chat_db(backup_path)
+    raise ValueError(
+        f"Invalid backup type: {backup.type!r}. Must be 'iphone' or 'macos'."
+    )
 
 
 def locate_chat_db(backup_path: Path) -> Path:

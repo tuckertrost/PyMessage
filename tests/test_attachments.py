@@ -4,14 +4,15 @@ import hashlib
 from pathlib import Path
 
 from pymessage.attachments import get_attachments, resolve_attachment_path
+from pymessage.backups import Backup
 
 
 class TestGetAttachments:
     """Tests for get_attachments function."""
 
-    def test_get_all_attachments(self, mock_chat_db: Path):
+    def test_get_all_attachments(self, mock_backup: Backup):
         """Test retrieving all attachments."""
-        df = get_attachments(db_path=mock_chat_db)
+        df = get_attachments(mock_backup)
         assert not df.empty
         assert len(df) == 1  # 1 attachment in fixture
         assert list(df.columns) == [
@@ -20,29 +21,31 @@ class TestGetAttachments:
             "filename",
             "mime_type",
             "file_size",
-            "backup_path",
+            "file_path",
             "timestamp",
             "sender",
         ]
 
-    def test_attachment_metadata(self, mock_chat_db: Path):
+    def test_attachment_metadata(self, mock_backup: Backup):
         """Test that attachment metadata is correct."""
-        df = get_attachments(db_path=mock_chat_db)
+        df = get_attachments(mock_backup)
         assert df.iloc[0]["filename"] == "Library/SMS/Attachments/ab/12/IMG_1234.jpg"
         assert df.iloc[0]["mime_type"] == "image/jpeg"
         assert df.iloc[0]["file_size"] == 102400
 
-    def test_timestamp_converted(self, mock_chat_db: Path):
+    def test_timestamp_converted(self, mock_backup: Backup):
         """Test that timestamp is properly converted."""
-        df = get_attachments(db_path=mock_chat_db)
+        df = get_attachments(mock_backup)
         # Pandas may use us (microseconds) or ns (nanoseconds)
         assert "datetime64" in str(df["timestamp"].dtype)
         assert "UTC" in str(df["timestamp"].dtype)
 
-    def test_backup_path_none_without_backup(self, mock_chat_db: Path):
-        """Test that backup_path is None when using db_path."""
-        df = get_attachments(db_path=mock_chat_db)
-        assert df.iloc[0]["backup_path"] is None
+    def test_file_path_none_for_missing_file(self, mock_backup: Backup):
+        """Test that file_path is None when the backup file doesn't exist."""
+        df = get_attachments(mock_backup)
+        # The test backup doesn't contain the actual image file,
+        # so resolve_attachment_path returns None
+        assert df.iloc[0]["file_path"] is None
 
 
 class TestResolveAttachmentPath:

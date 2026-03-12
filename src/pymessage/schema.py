@@ -133,3 +133,60 @@ def parse_reaction_type(
 
     # Not a recognized reaction type
     return (None, None)
+
+
+# attributedBody binary format constants
+_NS_STRING_MARKER = b"NSString"
+_ATTRIBUTED_BODY_PREAMBLE_LEN = 5  # bytes after NSString marker before length
+_MULTI_BYTE_LENGTH_FLAG = 0x81  # indicates 2-byte little-endian length follows
+
+
+def parse_attributed_body(blob: bytes | None) -> str | None:
+    """Extract plain text from an iMessage attributedBody binary blob.
+
+    Modern macOS (Ventura+) and iOS 16+ store message text in the
+    attributedBody column as a serialized NSAttributedString (typedstream
+    format) instead of the text column. This function extracts the plain
+    text content from that binary blob.
+
+    Args:
+        blob: Raw bytes from the attributedBody column, or None.
+
+    Returns:
+        Extracted plain text string, or None if blob is None/empty/unparseable.
+
+    Examples:
+        >>> parse_attributed_body(None) is None
+        True
+        >>> parse_attributed_body(b"") is None
+        True
+    """
+    if not blob:
+        return None
+
+    idx = blob.find(_NS_STRING_MARKER)
+    if idx == -1:
+        return None
+
+    # Skip marker + preamble
+    start = idx + len(_NS_STRING_MARKER) + _ATTRIBUTED_BODY_PREAMBLE_LEN
+    if start >= len(blob):
+        return None
+
+    # Read length
+    length_byte = blob[start]
+    if length_byte == _MULTI_BYTE_LENGTH_FLAG:
+        # 2-byte little-endian length
+        if start + 3 > len(blob):
+            return None
+        length = int.from_bytes(blob[start + 1 : start + 3], byteorder="little")
+        text_start = start + 3
+    else:
+        length = length_byte
+        text_start = start + 1
+
+    # Extract text
+    if text_start + length > len(blob):
+        return None
+
+    return blob[text_start : text_start + length].decode("utf-8", errors="replace")

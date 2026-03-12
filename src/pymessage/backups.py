@@ -5,50 +5,124 @@ extracting metadata from backup directories.
 """
 
 import plistlib
+import sqlite3
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 
-def find_backups() -> list[dict[str, Any]]:
-    """Scan default macOS location for iPhone backups.
+@dataclass
+class Backup:
+    """Represents a single iMessage data source.
 
-    Searches ~/Library/Application Support/MobileSync/Backup/ for backup
-    directories and extracts metadata from each.
+    Wraps either an iPhone backup directory or the macOS Messages database
+    into a unified object accepted by all pymessage functions.
 
-    Returns:
-        List of backup metadata dictionaries, each containing:
-        - path (Path): Absolute path to backup directory
-        - device_name (str): Device name from Info.plist
-        - last_backup (datetime): Last backup timestamp
-        - ios_version (str): iOS version string
-        - phone_number (str | None): Phone number if available
-        - serial_number (str): Device serial number
+    Attributes:
+        type: Source type — "iphone" or "macos".
+        path: Path to backup directory (iphone) or chat.db file (macos).
+        device_name: Human-readable device label.
+        last_backup: Timestamp of most recent backup, or None if unknown.
+        ios_version: iOS version string (e.g. "17.2"), or None.
+        phone_number: Device phone number, or None if unavailable.
 
     Examples:
         >>> backups = find_backups()
-        >>> for backup in backups:
-        ...     print(f"{backup['device_name']}: {backup['path']}")
-        John's iPhone: /Users/user/Library/Application Support/MobileSync/Backup/abc123...
+        >>> df = get_messages(backups[0])
+
+        >>> print(backups[0])
+        [iPhone] Tucker's iPhone (iOS 17.2) — Last backup: 2024-03-01
+    """
+
+    type: str
+    path: Path
+    device_name: str
+    last_backup: datetime | None
+    ios_version: str | None
+    phone_number: str | None
+
+    def __repr__(self) -> str:
+        if self.type == "iphone":
+            ios = f" (iOS {self.ios_version})" if self.ios_version else ""
+            date = (
+                f" \u2014 Last backup: {self.last_backup.date()}"
+                if self.last_backup
+                else ""
+            )
+            return f"[iPhone] {self.device_name}{ios}{date}"
+        return f"[macOS] {self.device_name}"
+
+
+def find_backups() -> list[Backup]:
+    """Scan for all available iMessage data sources.
+
+    Searches ~/Library/Application Support/MobileSync/Backup/ for iPhone
+    backups and checks ~/Library/Messages/chat.db for the macOS Messages
+    database.
+
+    Returns:
+        List of Backup objects sorted by last backup date (most recent first),
+        with the macOS entry appended at the end if found.
+
+    Examples:
+        >>> backups = find_backups()
+        >>> for b in backups:
+        ...     print(b)
+        [iPhone] Tucker's iPhone (iOS 17.2) — Last backup: 2024-03-01
+        [macOS] MacBook Messages
     """
     # Default macOS backup location
-    backup_root = Path.home() / "Library" / "Application Support" / "MobileSync" / "Backup"
+    backup_root = (
+        Path.home() / "Library" / "Application Support" / "MobileSync" / "Backup"
+    )
 
-    if not backup_root.exists():
-        return []
+    backups: list[Backup] = []
 
-    backups = []
-    for backup_dir in backup_root.iterdir():
-        if backup_dir.is_dir():
-            try:
-                info = get_backup_info(backup_dir)
-                backups.append(info)
-            except (FileNotFoundError, ValueError):
-                # Skip invalid backup directories
-                continue
+    if backup_root.exists():
+        raw: list[dict[str, Any]] = []
+        for backup_dir in backup_root.iterdir():
+            if backup_dir.is_dir():
+                try:
+                    info = get_backup_info(backup_dir)
+                    raw.append(info)
+                except (FileNotFoundError, ValueError):
+                    continue
 
-    # Sort by last backup date (most recent first)
-    backups.sort(key=lambda x: x["last_backup"], reverse=True)
+        # Sort by last backup date (most recent first)
+        raw.sort(key=lambda x: x["last_backup"], reverse=True)
+
+        for info in raw:
+            backups.append(
+                Backup(
+                    type="iphone",
+                    path=info["path"],
+                    device_name=info["device_name"],
+                    last_backup=info["last_backup"],
+                    ios_version=info["ios_version"],
+                    phone_number=info["phone_number"],
+                )
+            )
+
+    # Check for macOS Messages database
+    macos_db = Path.home() / "Library" / "Messages" / "chat.db"
+    if macos_db.exists():
+        try:
+            conn = sqlite3.connect(f"file:{macos_db}?mode=ro", uri=True)
+            conn.execute("SELECT COUNT(*) FROM message")
+            conn.close()
+            backups.append(
+                Backup(
+                    type="macos",
+                    path=macos_db,
+                    device_name="MacBook Messages",
+                    last_backup=None,
+                    ios_version=None,
+                    phone_number=None,
+                )
+            )
+        except Exception:
+            pass
 
     return backups
 

@@ -3,7 +3,11 @@
 import pandas as pd
 import pytest
 
-from pymessage.schema import convert_apple_timestamp, parse_reaction_type
+from pymessage.schema import (
+    convert_apple_timestamp,
+    parse_attributed_body,
+    parse_reaction_type,
+)
 
 
 class TestConvertAppleTimestamp:
@@ -118,3 +122,64 @@ class TestParseReactionType:
         assert parse_reaction_type(1) == (None, None)
         assert parse_reaction_type(1000) == (None, None)
         assert parse_reaction_type(4000) == (None, None)
+
+
+def _build_attributed_body_blob(text: str, use_multi_byte_length: bool = False) -> bytes:
+    """Helper to build a realistic attributedBody blob for testing."""
+    text_bytes = text.encode("utf-8")
+    header = b"\x04\x0bstreamtyped\x81\xe8\x03" + b"\x00" * 20
+    preamble = b"\x01\x94\x84\x01+"
+    if use_multi_byte_length:
+        length_bytes = b"\x81" + len(text_bytes).to_bytes(2, byteorder="little")
+    else:
+        length_bytes = bytes([len(text_bytes)])
+    return header + b"NSString" + preamble + length_bytes + text_bytes + b"\x00" * 10
+
+
+class TestParseAttributedBody:
+    """Tests for parse_attributed_body function."""
+
+    def test_none_input(self):
+        """Test that None returns None."""
+        assert parse_attributed_body(None) is None
+
+    def test_empty_blob(self):
+        """Test that empty bytes returns None."""
+        assert parse_attributed_body(b"") is None
+
+    def test_no_nsstring_marker(self):
+        """Test that blob without NSString marker returns None."""
+        assert parse_attributed_body(b"\x00" * 50) is None
+
+    def test_short_message_single_byte_length(self):
+        """Test decoding a short message with 1-byte length."""
+        blob = _build_attributed_body_blob("Hello!")
+        result = parse_attributed_body(blob)
+        assert result == "Hello!"
+
+    def test_longer_message(self):
+        """Test decoding a longer message."""
+        text = "This is a longer test message with more content."
+        blob = _build_attributed_body_blob(text)
+        result = parse_attributed_body(blob)
+        assert result == text
+
+    def test_multi_byte_length(self):
+        """Test decoding a message with 2-byte (multi-byte) length encoding."""
+        text = "A" * 200  # > 127 chars, needs multi-byte length
+        blob = _build_attributed_body_blob(text, use_multi_byte_length=True)
+        result = parse_attributed_body(blob)
+        assert result == text
+
+    def test_truncated_blob_returns_none(self):
+        """Test that a truncated blob returns None."""
+        # Blob that has NSString marker but is cut off before text
+        blob = b"\x00" * 10 + b"NSString" + b"\x01\x94\x84\x01+"
+        assert parse_attributed_body(blob) is None
+
+    def test_unicode_content(self):
+        """Test decoding a message with unicode characters."""
+        text = "Hello! \U0001f600 How are you?"
+        blob = _build_attributed_body_blob(text)
+        result = parse_attributed_body(blob)
+        assert result == text

@@ -9,13 +9,14 @@ from pathlib import Path
 
 import pandas as pd
 
+from pymessage.contacts import build_contacts_lookup
 from pymessage.db import ChatDatabase
 from pymessage.schema import GROUP_CHAT_PREFIX, convert_apple_timestamp
+from pymessage.utils import normalize_phone_number
 
 
 def list_conversations(
-    backup_path: str | Path | None = None,
-    db_path: str | Path | None = None,
+    backup,
     include_empty: bool = False,
 ) -> pd.DataFrame:
     """List all conversations with summary statistics.
@@ -24,8 +25,8 @@ def list_conversations(
     message count, and date range.
 
     Args:
-        backup_path: Path to iPhone backup directory (mutually exclusive with db_path).
-        db_path: Direct path to chat.db file (mutually exclusive with backup_path).
+        backup: A Backup object specifying the data source. Use find_backups()
+            to discover available sources, or EXAMPLE_BACKUP for testing.
         include_empty: Include conversations with no messages (default False).
 
     Returns:
@@ -40,17 +41,18 @@ def list_conversations(
         - display_name (str | None): Chat display name if available
 
     Raises:
-        ValueError: If both or neither of backup_path/db_path provided.
         FileNotFoundError: If specified path doesn't exist.
 
     Examples:
-        >>> df = list_conversations(backup_path="/path/to/backup")
+        >>> from pymessage import find_backups, list_conversations
+        >>> backups = find_backups()
+        >>> df = list_conversations(backups[0])
         >>> # Filter to group chats only
         >>> groups = df[df["is_group_chat"] == True]
         >>> # Sort by most active
         >>> df.sort_values("message_count", ascending=False)
     """
-    with ChatDatabase(db_path=db_path, backup_path=backup_path) as conn:
+    with ChatDatabase(backup) as conn:
         # Query chat statistics
         query = """
             SELECT
@@ -81,8 +83,10 @@ def list_conversations(
         else:
             df["participants"] = None
 
+    contacts_lookup = build_contacts_lookup(backup)
+
     # Process DataFrame
-    df = _process_conversations_dataframe(df)
+    df = _process_conversations_dataframe(df, contacts_lookup)
 
     return df
 

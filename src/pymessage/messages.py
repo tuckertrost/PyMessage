@@ -9,30 +9,31 @@ from pathlib import Path
 
 import pandas as pd
 
+from pymessage.contacts import build_contacts_lookup
 from pymessage.db import ChatDatabase
 from pymessage.schema import (
     GROUP_CHAT_PREFIX,
     convert_apple_timestamp,
+    parse_attributed_body,
     parse_reaction_type,
 )
 from pymessage.utils import generate_phone_variants, normalize_phone_number
 
 
 def get_messages(
-    backup_path: str | Path | None = None,
-    db_path: str | Path | None = None,
+    backup,
     phone_numbers: str | list[str] | None = None,
     date_range: tuple[str | datetime, str | datetime] | None = None,
     output_csv: str | Path | None = None,
 ) -> pd.DataFrame:
-    """Retrieve iMessage messages from iPhone backup database.
+    """Retrieve iMessage messages from a chat database.
 
     Query messages with optional filtering by phone numbers and date range.
     Returns a pandas DataFrame with message details, attachments, and reactions.
 
     Args:
-        backup_path: Path to iPhone backup directory (mutually exclusive with db_path).
-        db_path: Direct path to chat.db file (mutually exclusive with backup_path).
+        backup: A Backup object specifying the data source. Use find_backups()
+            to discover available sources, or EXAMPLE_BACKUP for testing.
         phone_numbers: Single phone number or list to filter conversations.
             Accepts various formats: "+1234567890", "(123) 456-7890", "email@example.com"
         date_range: Tuple of (start, end) dates for filtering. Dates can be:
@@ -46,32 +47,30 @@ def get_messages(
         - timestamp (pd.Timestamp): Message timestamp in UTC
         - read_at (pd.Timestamp | None): When message was read (None if unread)
         - sender (str): Phone number or email of sender
+        - contact_name (str): Display name from handle table, or "Me" for sent messages
         - message_text (str): Text content of message
         - is_from_me (bool): True if sent by device owner
         - chat_id (str): Chat identifier
         - is_group_chat (bool): True if group conversation
-        - attachment_path (str | None): Path to attachment file in backup
+        - attachment_path (str | None): Path to attachment file
         - reaction_type (str | None): Type of reaction if this is a tapback
         - reaction_action (str | None): "add" or "remove" for reactions
 
     Raises:
-        ValueError: If both or neither of backup_path/db_path provided.
         ValueError: If date_range has invalid format.
         FileNotFoundError: If specified path doesn't exist.
 
     Examples:
-        >>> # Get all messages from backup
-        >>> df = get_messages(backup_path="/path/to/backup")
+        >>> from pymessage import find_backups, get_messages
+        >>> backups = find_backups()
+        >>> df = get_messages(backups[0])
 
         >>> # Get messages for specific contact
-        >>> df = get_messages(
-        ...     backup_path="/path/to/backup",
-        ...     phone_numbers="+1234567890"
-        ... )
+        >>> df = get_messages(backups[0], phone_numbers="+1234567890")
 
         >>> # Get messages in date range and export to CSV
         >>> df = get_messages(
-        ...     db_path="/path/to/chat.db",
+        ...     backups[0],
         ...     date_range=("2024-01-01", "2024-12-31"),
         ...     output_csv="messages.csv"
         ... )
@@ -85,12 +84,21 @@ def get_messages(
     # Build SQL query
     query, params = _build_message_query(phone_list, start_date, end_date)
 
-    # Execute query
-    with ChatDatabase(db_path=db_path, backup_path=backup_path) as conn:
+    # Build contacts lookup from AddressBook (higher priority than handle table)
+    contacts_lookup = build_contacts_lookup(backup)
+
+    # Execute query and build handle lookup (fallback when no contacts entry)
+    with ChatDatabase(backup) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, uncanonicalized_id FROM handle")
+        handle_lookup = {
+            row["id"]: (row["uncanonicalized_id"] or row["id"])
+            for row in cursor.fetchall()
+        }
         df = pd.read_sql_query(query, conn, params=params)
 
     # Process DataFrame
-    df = _process_message_dataframe(df)
+    df = _process_message_dataframe(df, handle_lookup, contacts_lookup)
 
     # Export to CSV if requested
     if output_csv:
@@ -178,6 +186,7 @@ def _build_message_query(
         SELECT
             m.rowid,
             m.text,
+            m.attributedBody,
             m.date,
             m.date_read,
             m.is_from_me,
@@ -203,38 +212,59 @@ def _build_message_query(
         for phone in phone_list:
             all_variants.extend(generate_phone_variants(phone))
 
-        # Build IN clause with placeholders
+        # Filter by chat_identifier matching the phone number.
+        # 1-on-1 chats use the contact's phone number as chat_identifier,
+        # so this naturally excludes group chats (which use "chat..." IDs).
         placeholders = ",".join("?" * len(all_variants))
-        query += f" AND h.id IN ({placeholders})"
+        query += f" AND c.chat_identifier IN ({placeholders})"
         params.extend(all_variants)
 
-    # Add date range filter (convert pandas timestamps to Apple epoch)
+    # Add date range filter. The message.date column uses two formats:
+    #   - nanoseconds since 2001-01-01 (modern iOS, m.date >= 1e12)
+    #   - seconds since 2001-01-01 (older iOS, m.date < 1e12)
+    # Both must be handled so the comparison is meaningful either way.
+    _NS_THRESH = 1_000_000_000_000  # same as schema.NANOSECOND_THRESHOLD
+    apple_epoch = pd.Timestamp("2001-01-01", tz="UTC")
+
     if start_date is not None:
-        # Convert to seconds since Apple epoch (2001-01-01)
-        apple_epoch = pd.Timestamp("2001-01-01", tz="UTC")
         start_seconds = (start_date - apple_epoch).total_seconds()
-        query += " AND m.date >= ?"
-        params.append(start_seconds)
+        start_ns = int(start_seconds * 1_000_000_000)
+        query += (
+            f" AND ((m.date >= {_NS_THRESH} AND m.date >= ?)"
+            f" OR (m.date < {_NS_THRESH} AND m.date >= ?))"
+        )
+        params.extend([start_ns, start_seconds])
 
     if end_date is not None:
-        apple_epoch = pd.Timestamp("2001-01-01", tz="UTC")
         end_seconds = (end_date - apple_epoch).total_seconds()
-        query += " AND m.date <= ?"
-        params.append(end_seconds)
+        end_ns = int(end_seconds * 1_000_000_000)
+        query += (
+            f" AND ((m.date >= {_NS_THRESH} AND m.date <= ?)"
+            f" OR (m.date < {_NS_THRESH} AND m.date <= ?))"
+        )
+        params.extend([end_ns, end_seconds])
 
     query += " ORDER BY m.date ASC"
 
     return (query, params)
 
 
-def _process_message_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+def _process_message_dataframe(
+    df: pd.DataFrame,
+    handle_lookup: dict[str, str],
+    contacts_lookup: dict[str, str] | None = None,
+) -> pd.DataFrame:
     """Process raw query results into clean DataFrame.
 
     Applies timestamp conversion, reaction parsing, group chat detection,
-    and column renaming.
+    contact name resolution, and column renaming.
 
     Args:
         df: Raw DataFrame from SQL query.
+        handle_lookup: Mapping of handle.id to display name (uncanonicalized_id
+            or fallback to id).
+        contacts_lookup: Optional mapping of normalized phone number to display
+            name from the system AddressBook (higher priority than handle_lookup).
 
     Returns:
         Processed DataFrame with clean columns.
@@ -246,6 +276,7 @@ def _process_message_dataframe(df: pd.DataFrame) -> pd.DataFrame:
                 "timestamp",
                 "read_at",
                 "sender",
+                "contact_name",
                 "message_text",
                 "is_from_me",
                 "chat_id",
@@ -254,6 +285,13 @@ def _process_message_dataframe(df: pd.DataFrame) -> pd.DataFrame:
                 "reaction_type",
                 "reaction_action",
             ]
+        )
+
+    # Fall back to attributedBody when text is NULL (modern macOS/iOS)
+    mask = df["text"].isna()
+    if mask.any():
+        df.loc[mask, "text"] = df.loc[mask, "attributedBody"].apply(
+            parse_attributed_body
         )
 
     # Convert timestamps
@@ -273,6 +311,19 @@ def _process_message_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     # Convert is_from_me to boolean
     df["is_from_me"] = df["is_from_me"].astype(bool)
 
+    # Resolve contact name: AddressBook name > handle table > raw sender
+    def _resolve_name(r):
+        if r["is_from_me"]:
+            return "Me"
+        sender = r["sender"]
+        if contacts_lookup and isinstance(sender, str):
+            normalized = normalize_phone_number(sender)
+            if normalized in contacts_lookup:
+                return contacts_lookup[normalized]
+        return handle_lookup.get(sender, sender)
+
+    df["contact_name"] = df.apply(_resolve_name, axis=1)
+
     # Select and rename columns
     df = df.rename(
         columns={
@@ -286,6 +337,7 @@ def _process_message_dataframe(df: pd.DataFrame) -> pd.DataFrame:
         "timestamp",
         "read_at",
         "sender",
+        "contact_name",
         "message_text",
         "is_from_me",
         "chat_id",

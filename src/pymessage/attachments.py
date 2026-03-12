@@ -10,13 +10,13 @@ from pathlib import Path
 import pandas as pd
 
 from pymessage.db import ChatDatabase
+from pymessage.macos import resolve_macos_attachment_path
 from pymessage.schema import convert_apple_timestamp
 from pymessage.utils import generate_phone_variants, normalize_phone_number
 
 
 def get_attachments(
-    backup_path: str | Path | None = None,
-    db_path: str | Path | None = None,
+    backup,
     phone_numbers: str | list[str] | None = None,
 ) -> pd.DataFrame:
     """Retrieve attachment metadata and file paths.
@@ -25,8 +25,8 @@ def get_attachments(
     optionally filtered by phone numbers.
 
     Args:
-        backup_path: Path to iPhone backup directory (mutually exclusive with db_path).
-        db_path: Direct path to chat.db file (mutually exclusive with backup_path).
+        backup: A Backup object specifying the data source. Use find_backups()
+            to discover available sources, or EXAMPLE_BACKUP for testing.
         phone_numbers: Filter to attachments in these conversations.
 
     Returns:
@@ -36,16 +36,17 @@ def get_attachments(
         - filename (str): Original filename
         - mime_type (str): MIME type (e.g., "image/jpeg")
         - file_size (int): Size in bytes
-        - backup_path (str | None): Full path in backup if backup_path provided
+        - file_path (str | None): Resolved path to attachment file
         - timestamp (pd.Timestamp): Message timestamp
         - sender (str): Sender phone/email
 
     Raises:
-        ValueError: If both or neither of backup_path/db_path provided.
         FileNotFoundError: If specified path doesn't exist.
 
     Examples:
-        >>> df = get_attachments(backup_path="/path/to/backup")
+        >>> from pymessage import find_backups, get_attachments
+        >>> backups = find_backups()
+        >>> df = get_attachments(backups[0])
         >>> # Filter to images only
         >>> images = df[df["mime_type"].str.startswith("image/")]
     """
@@ -59,15 +60,12 @@ def get_attachments(
     # Build SQL query
     query, params = _build_attachments_query(phone_list)
 
-    # Determine backup root if backup_path provided
-    backup_root = Path(backup_path) if backup_path else None
-
     # Execute query
-    with ChatDatabase(db_path=db_path, backup_path=backup_path) as conn:
+    with ChatDatabase(backup) as conn:
         df = pd.read_sql_query(query, conn, params=params)
 
     # Process DataFrame
-    df = _process_attachments_dataframe(df, backup_root)
+    df = _process_attachments_dataframe(df, backup)
 
     return df
 
@@ -143,9 +141,17 @@ def _build_attachments_query(
         for phone in phone_list:
             all_variants.extend(generate_phone_variants(phone))
 
-        # Build IN clause with placeholders
+        # Filter by chat_identifier matching the phone number.
+        # Attachments query doesn't join chat tables, so use a subquery
+        # through chat_message_join → chat to match on chat_identifier.
         placeholders = ",".join("?" * len(all_variants))
-        query += f" AND h.id IN ({placeholders})"
+        query += f"""
+            AND m.rowid IN (
+                SELECT cmj.message_id FROM chat_message_join cmj
+                JOIN chat c2 ON cmj.chat_id = c2.rowid
+                WHERE c2.chat_identifier IN ({placeholders})
+            )
+        """
         params.extend(all_variants)
 
     query += " ORDER BY m.date DESC"
@@ -154,13 +160,14 @@ def _build_attachments_query(
 
 
 def _process_attachments_dataframe(
-    df: pd.DataFrame, backup_root: Path | None
+    df: pd.DataFrame,
+    backup,
 ) -> pd.DataFrame:
     """Process raw attachments query results into clean DataFrame.
 
     Args:
         df: Raw DataFrame from SQL query.
-        backup_root: Backup root path for resolving attachment paths.
+        backup: Backup object used to determine path resolution strategy.
 
     Returns:
         Processed DataFrame with clean columns.
@@ -173,7 +180,7 @@ def _process_attachments_dataframe(
                 "filename",
                 "mime_type",
                 "file_size",
-                "backup_path",
+                "file_path",
                 "timestamp",
                 "sender",
             ]
@@ -182,15 +189,23 @@ def _process_attachments_dataframe(
     # Convert timestamps
     df["timestamp"] = df["date"].apply(convert_apple_timestamp)
 
-    # Resolve backup paths if backup_root provided
-    if backup_root:
-        df["backup_path"] = df["filename"].apply(
-            lambda f: str(resolve_attachment_path(f, backup_root))
+    # Resolve attachment file paths based on source
+    if backup.type == "macos":
+        df["file_path"] = df["filename"].apply(
+            lambda f: str(resolve_macos_attachment_path(f))
             if pd.notna(f)
             else None
         )
+    elif backup.type == "iphone":
+        backup_root = Path(backup.path)
+        def _resolve_backup(f):
+            if not pd.notna(f):
+                return None
+            p = resolve_attachment_path(f, backup_root)
+            return str(p) if p is not None else None
+        df["file_path"] = df["filename"].apply(_resolve_backup)
     else:
-        df["backup_path"] = None
+        df["file_path"] = None
 
     # Select final columns in desired order
     columns = [
@@ -199,7 +214,7 @@ def _process_attachments_dataframe(
         "filename",
         "mime_type",
         "file_size",
-        "backup_path",
+        "file_path",
         "timestamp",
         "sender",
     ]
