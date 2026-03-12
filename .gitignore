@@ -143,3 +143,5 @@ dmypy.json
 
 # Vendor directory (external dependencies)
 vendor/
+
+CLAUDE.MD
