@@ -6,6 +6,7 @@ extracting metadata from backup directories.
 
 import plistlib
 import sqlite3
+import warnings
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -121,8 +122,14 @@ def find_backups() -> list[Backup]:
                     phone_number=None,
                 )
             )
-        except Exception:
-            pass
+        except Exception as e:
+            warnings.warn(
+                f"Found {macos_db} but could not open it: {e}\n"
+                "This is usually a permissions issue. Grant Full Disk Access to your\n"
+                "Terminal (or Python/Jupyter) in:\n"
+                "  System Settings → Privacy & Security → Full Disk Access",
+                stacklevel=2,
+            )
 
     return backups
 

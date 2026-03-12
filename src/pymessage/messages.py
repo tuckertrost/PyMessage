@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from pymessage.backups import Backup
 from pymessage.contacts import build_contacts_lookup
 from pymessage.db import ChatDatabase
 from pymessage.schema import (
@@ -32,8 +33,9 @@ def get_messages(
     Returns a pandas DataFrame with message details, attachments, and reactions.
 
     Args:
-        backup: A Backup object specifying the data source. Use find_backups()
-            to discover available sources, or EXAMPLE_BACKUP for testing.
+        backup: A Backup object from find_backups(), or a direct path (str or
+            Path) to a chat.db file (e.g. ~/Library/Messages/chat.db on macOS).
+            Also accepts EXAMPLE_BACKUP for testing.
         phone_numbers: Single phone number or list to filter conversations.
             Accepts various formats: "+1234567890", "(123) 456-7890", "email@example.com"
         date_range: Tuple of (start, end) dates for filtering. Dates can be:
@@ -75,6 +77,20 @@ def get_messages(
         ...     output_csv="messages.csv"
         ... )
     """
+    # Accept a raw path as a convenience — wrap it in a macOS Backup object
+    if isinstance(backup, (str, Path)):
+        path = Path(backup).expanduser().resolve()
+        if not path.exists():
+            raise FileNotFoundError(f"chat.db not found at: {path}")
+        backup = Backup(
+            type="macos",
+            path=path,
+            device_name=str(path),
+            last_backup=None,
+            ios_version=None,
+            phone_number=None,
+        )
+
     # Normalize phone numbers to list
     phone_list = _normalize_phone_input(phone_numbers)
 
