@@ -7,13 +7,13 @@ PyMessage makes it dead simple to go from an iPhone backup → filtered message 
 ## Installation
 
 ```bash
-uv pip install pymessage
+uv pip install git+https://github.com/tuckertrostbyui/PyMessage.git
 ```
 
 Or with standard pip:
 
 ```bash
-pip install pymessage
+pip install git+https://github.com/tuckertrostbyui/PyMessage.git
 ```
 
 ## Requirements
