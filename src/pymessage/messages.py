@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from pymessage.backups import Backup
+from pymessage.backups import coerce_to_backup
 from pymessage.contacts import build_contacts_lookup
 from pymessage.db import ChatDatabase
 from pymessage.schema import (
@@ -77,19 +77,7 @@ def get_messages(
         ...     output_csv="messages.csv"
         ... )
     """
-    # Accept a raw path as a convenience — wrap it in a macOS Backup object
-    if isinstance(backup, (str, Path)):
-        path = Path(backup).expanduser().resolve()
-        if not path.exists():
-            raise FileNotFoundError(f"chat.db not found at: {path}")
-        backup = Backup(
-            type="macos",
-            path=path,
-            device_name=str(path),
-            last_backup=None,
-            ios_version=None,
-            phone_number=None,
-        )
+    backup = coerce_to_backup(backup)
 
     # Normalize phone numbers to list
     phone_list = _normalize_phone_input(phone_numbers)

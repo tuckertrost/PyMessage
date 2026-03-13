@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from pymessage.backups import coerce_to_backup
 from pymessage.contacts import build_contacts_lookup
 from pymessage.db import ChatDatabase
 from pymessage.schema import GROUP_CHAT_PREFIX, convert_apple_timestamp
@@ -52,6 +53,8 @@ def list_conversations(
         >>> # Sort by most active
         >>> df.sort_values("message_count", ascending=False)
     """
+    backup = coerce_to_backup(backup)
+
     with ChatDatabase(backup) as conn:
         # Query chat statistics
         query = """
@@ -149,11 +152,12 @@ def is_group_chat(chat_identifier: str, participant_count: int) -> bool:
     return chat_identifier.startswith(GROUP_CHAT_PREFIX) or participant_count > 2
 
 
-def _process_conversations_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+def _process_conversations_dataframe(df: pd.DataFrame, contacts_lookup: dict) -> pd.DataFrame:
     """Process raw conversations query results into clean DataFrame.
 
     Args:
         df: Raw DataFrame from SQL query.
+        contacts_lookup: Mapping of normalized phone number to display name.
 
     Returns:
         Processed DataFrame with clean columns.
@@ -162,6 +166,7 @@ def _process_conversations_dataframe(df: pd.DataFrame) -> pd.DataFrame:
         return pd.DataFrame(
             columns=[
                 "chat_id",
+                "contact_name",
                 "is_group_chat",
                 "participants",
                 "participant_count",
@@ -185,9 +190,27 @@ def _process_conversations_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     # Rename columns
     df = df.rename(columns={"chat_identifier": "chat_id"})
 
+    # Resolve contact_name: for 1-on-1 chats look up chat_id (the phone number);
+    # for group chats use display_name if set, else None.
+    def _resolve_convo_name(row):
+        if row["is_group_chat"]:
+            dn = row["display_name"]
+            return dn if pd.notna(dn) and dn else None
+        chat_id = row["chat_id"]
+        if not isinstance(chat_id, str):
+            return chat_id
+        if contacts_lookup:
+            normalized = normalize_phone_number(chat_id)
+            if normalized in contacts_lookup:
+                return contacts_lookup[normalized]
+        return chat_id
+
+    df["contact_name"] = df.apply(_resolve_convo_name, axis=1)
+
     # Select final columns in desired order
     columns = [
         "chat_id",
+        "contact_name",
         "is_group_chat",
         "participants",
         "participant_count",

@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from pymessage.backups import coerce_to_backup
 from pymessage.db import ChatDatabase
 from pymessage.macos import resolve_macos_attachment_path
 from pymessage.schema import convert_apple_timestamp
@@ -56,6 +57,8 @@ def get_attachments(
         if isinstance(phone_numbers, str):
             phone_numbers = [phone_numbers]
         phone_list = [normalize_phone_number(phone) for phone in phone_numbers]
+
+    backup = coerce_to_backup(backup)
 
     # Build SQL query
     query, params = _build_attachments_query(phone_list)

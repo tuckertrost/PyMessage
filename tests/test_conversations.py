@@ -21,6 +21,7 @@ class TestListConversations:
         assert len(df) == 2  # 2 chats in fixture
         assert list(df.columns) == [
             "chat_id",
+            "contact_name",
             "is_group_chat",
             "participants",
             "participant_count",

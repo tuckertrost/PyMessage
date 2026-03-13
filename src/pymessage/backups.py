@@ -55,6 +55,31 @@ class Backup:
         return f"[macOS] {self.device_name}"
 
 
+def coerce_to_backup(backup) -> "Backup":
+    """Accept a Backup object or a raw path string/Path to a chat.db file.
+
+    Passing a raw path is a convenience shortcut — it wraps the path in a
+    macOS-type Backup so callers can write::
+
+        get_messages('/Users/me/Library/Messages/chat.db')
+
+    instead of constructing a Backup manually.
+    """
+    if isinstance(backup, Backup):
+        return backup
+    path = Path(backup).expanduser().resolve()
+    if not path.exists():
+        raise FileNotFoundError(f"chat.db not found at: {path}")
+    return Backup(
+        type="macos",
+        path=path,
+        device_name=str(path),
+        last_backup=None,
+        ios_version=None,
+        phone_number=None,
+    )
+
+
 def find_backups() -> list[Backup]:
     """Scan for all available iMessage data sources.
 
