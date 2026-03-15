@@ -62,7 +62,7 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://https://github.com/tuckertrostbyui
+      link: https://www.github.com/tuckertrostbyui
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/tuckertrost
 
