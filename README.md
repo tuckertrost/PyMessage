@@ -30,10 +30,10 @@ from pymessage import get_messages, find_backups
 # Find available backups automatically
 backups = find_backups()
 print(f"Found {len(backups)} backups")
-print(f"Most recent: {backups[0]['device_name']}")
+print(f"Most recent: {backups[0].device_name}")
 
 # Get all messages from most recent backup
-df = get_messages(backup_path=backups[0]["path"])
+df = get_messages(backups[0])
 print(f"Retrieved {len(df)} messages")
 print(df.head())
 ```
@@ -46,23 +46,23 @@ print(df.head())
 from pymessage import get_messages
 
 # Get all messages
-df = get_messages(backup_path="/path/to/backup")
+df = get_messages("/path/to/backup")
 
 # Filter by phone number
 df = get_messages(
-    backup_path="/path/to/backup",
+    "/path/to/backup",
     phone_numbers="+1234567890"
 )
 
 # Filter by date range
 df = get_messages(
-    backup_path="/path/to/backup",
+    "/path/to/backup",
     date_range=("2024-01-01", "2024-12-31")
 )
 
 # Export to CSV
 df = get_messages(
-    backup_path="/path/to/backup",
+    "/path/to/backup",
     phone_numbers=["+1234567890", "+0987654321"],
     output_csv="messages.csv"
 )
@@ -74,7 +74,7 @@ df = get_messages(
 from pymessage import list_conversations
 
 # Get all conversations with statistics
-conversations = list_conversations(backup_path="/path/to/backup")
+conversations = list_conversations("/path/to/backup")
 
 # Sort by most active
 conversations = conversations.sort_values("message_count", ascending=False)
@@ -92,9 +92,9 @@ from pymessage import find_backups, get_backup_info
 # Scan for all backups
 backups = find_backups()
 for backup in backups:
-    print(f"{backup['device_name']}: {backup['ios_version']}")
-    print(f"  Last backup: {backup['last_backup']}")
-    print(f"  Path: {backup['path']}")
+    print(f"{backup.device_name}: {backup.ios_version}")
+    print(f"  Last backup: {backup.last_backup}")
+    print(f"  Path: {backup.path}")
 
 # Get info for specific backup
 info = get_backup_info("/path/to/backup")
@@ -108,7 +108,7 @@ print(f"iOS: {info['ios_version']}")
 from pymessage import get_attachments
 
 # Get all attachments
-attachments = get_attachments(backup_path="/path/to/backup")
+attachments = get_attachments("/path/to/backup")
 
 # Filter to images only
 images = attachments[attachments["mime_type"].str.startswith("image/")]
@@ -116,7 +116,7 @@ print(f"Found {len(images)} images")
 
 # Get attachments for specific conversation
 attachments = get_attachments(
-    backup_path="/path/to/backup",
+    "/path/to/backup",
     phone_numbers="+1234567890"
 )
 ```

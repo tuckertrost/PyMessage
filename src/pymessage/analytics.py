@@ -291,7 +291,8 @@ def get_contact_summary(
         - total_messages (int)
         - total_sent (int)
         - total_received (int)
-        - send_receive_ratio (float)
+        - send_receive_ratio (float): total_sent / total_received. Returns
+          float("inf") if no messages have been received from this contact.
         - avg_messages_per_active_day (float)
         - total_active_days (int)
         - avg_read_time_seconds (float)

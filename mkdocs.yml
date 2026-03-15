@@ -1,11 +1,11 @@
 site_name: PyMessage Documentation
-site_url: https://yourusername.github.io/pymessage
+site_url: https://tuckertrostbyui.github.io/PyMessage
 theme:
   name: material
   icon:
     logo: fontawesome/solid/wind
   favicon: assets/favicon.ico
-  featuers:
+  features:
     - navigation.footer
   font:
     text: Merriweather Sans
@@ -61,9 +61,15 @@ plugins:
 
 extra:
   social:
-    - icon: fontawesome/brands/youtube
-      link: https://www.youtube.com/@byuidss
+    - icon: fontawesome/brands/github
+      link: https://https://github.com/tuckertrostbyui
     - icon: fontawesome/brands/linkedin
-      link: https://www.linkedin.com/school/byu-idaho
+      link: https://www.linkedin.com/in/tuckertrost
 
-copyright: Copyright &copy; 2026 J. Hathaway
+nav:
+  - Home: index.md
+  - iPhone Backup Guide: iphone-backup.md
+  - API Reference: API.md
+  - Code Examples: code-examples.md
+
+copyright: Copyright &copy; 2026 Tucker Trost

@@ -26,22 +26,23 @@ from pymessage import get_messages, find_backups
 # Find available backups
 backups = find_backups()
 print(f"Found {len(backups)} backups")
+print(f"Most recent: {backups[0].device_name}")
 
 # Get all messages from most recent backup
-df = get_messages(backup_path=backups[0]["path"])
+df = get_messages(backups[0])
 print(df.head())
 ```
 
 ## Installation
 
 ```bash
-pip install pymessage
+pip install git+https://github.com/tuckertrostbyui/PyMessage.git
 ```
 
 Or with uv:
 
 ```bash
-uv pip install pymessage
+uv pip install git+https://github.com/tuckertrostbyui/PyMessage.git
 ```
 
 ## Requirements
@@ -52,9 +53,10 @@ uv pip install pymessage
 
 ## Documentation
 
+- [iPhone Backup Guide](iphone-backup.md) - Step-by-step guide to back up your iPhone
 - [API Reference](API.md) - Complete API documentation
 - [Code Examples](code-examples.md) - Additional examples and usage patterns
 
 ## GitHub
 
-Visit the [PyMessage GitHub repository](https://github.com/yourusername/pymessage) for source code, issues, and contributions.
+Visit the [PyMessage GitHub repository](https://github.com/tuckertrostbyui/PyMessage) for source code, issues, and contributions.
