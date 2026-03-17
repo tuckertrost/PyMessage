@@ -4,6 +4,8 @@ This module provides utilities for finding iPhone backups on macOS and
 extracting metadata from backup directories.
 """
 
+import os
+import platform
 import plistlib
 import sqlite3
 import warnings
@@ -83,13 +85,24 @@ def coerce_to_backup(backup) -> "Backup":
 def find_backups() -> list[Backup]:
     """Scan for all available iMessage data sources.
 
-    Searches ~/Library/Application Support/MobileSync/Backup/ for iPhone
-    backups and checks ~/Library/Messages/chat.db for the macOS Messages
+    Searches the platform-specific iTunes backup directory for iPhone backups.
+    On macOS, also checks ~/Library/Messages/chat.db for the native Messages
     database.
+
+    Platform backup locations:
+
+    - **macOS**: ``~/Library/Application Support/MobileSync/Backup/``
+    - **Windows (new iTunes)**: ``%APPDATA%\\Apple\\MobileSync\\Backup\\``
+    - **Windows (old iTunes)**: ``%APPDATA%\\Apple Computer\\MobileSync\\Backup\\``
+
+    On Windows, the new iTunes path is checked first; if it does not exist the
+    old path is used as a fallback. On Linux and other platforms there is no
+    standard iTunes backup location, so the function returns an empty list
+    (users can still pass a path directly to any pymessage function).
 
     Returns:
         List of Backup objects sorted by last backup date (most recent first),
-        with the macOS entry appended at the end if found.
+        with the macOS entry appended at the end if found (macOS only).
 
     Examples:
         >>> backups = find_backups()
@@ -98,14 +111,24 @@ def find_backups() -> list[Backup]:
         [iPhone] Tucker's iPhone (iOS 17.2) — Last backup: 2024-03-01
         [macOS] MacBook Messages
     """
-    # Default macOS backup location
-    backup_root = (
-        Path.home() / "Library" / "Application Support" / "MobileSync" / "Backup"
-    )
+    _system = platform.system()
+    if _system == "Darwin":
+        backup_root = (
+            Path.home() / "Library" / "Application Support" / "MobileSync" / "Backup"
+        )
+    elif _system == "Windows":
+        _appdata = os.environ.get("APPDATA") or str(
+            Path.home() / "AppData" / "Roaming"
+        )
+        _new_itunes = Path(_appdata) / "Apple" / "MobileSync" / "Backup"
+        _old_itunes = Path(_appdata) / "Apple Computer" / "MobileSync" / "Backup"
+        backup_root = _new_itunes if _new_itunes.exists() else _old_itunes
+    else:
+        backup_root = None
 
     backups: list[Backup] = []
 
-    if backup_root.exists():
+    if backup_root is not None and backup_root.exists():
         raw: list[dict[str, Any]] = []
         for backup_dir in backup_root.iterdir():
             if backup_dir.is_dir():
@@ -130,31 +153,32 @@ def find_backups() -> list[Backup]:
                 )
             )
 
-    # Check for macOS Messages database
-    macos_db = Path.home() / "Library" / "Messages" / "chat.db"
-    if macos_db.exists():
-        try:
-            conn = sqlite3.connect(f"file:{macos_db}?mode=ro", uri=True)
-            conn.execute("SELECT COUNT(*) FROM message")
-            conn.close()
-            backups.append(
-                Backup(
-                    type="macos",
-                    path=macos_db,
-                    device_name="MacBook Messages",
-                    last_backup=None,
-                    ios_version=None,
-                    phone_number=None,
+    # Check for macOS Messages database (macOS only)
+    if _system == "Darwin":
+        macos_db = Path.home() / "Library" / "Messages" / "chat.db"
+        if macos_db.exists():
+            try:
+                conn = sqlite3.connect(f"file:{macos_db}?mode=ro", uri=True)
+                conn.execute("SELECT COUNT(*) FROM message")
+                conn.close()
+                backups.append(
+                    Backup(
+                        type="macos",
+                        path=macos_db,
+                        device_name="MacBook Messages",
+                        last_backup=None,
+                        ios_version=None,
+                        phone_number=None,
+                    )
                 )
-            )
-        except Exception as e:
-            warnings.warn(
-                f"Found {macos_db} but could not open it: {e}\n"
-                "This is usually a permissions issue. Grant Full Disk Access to your\n"
-                "Terminal (or Python/Jupyter) in:\n"
-                "  System Settings → Privacy & Security → Full Disk Access",
-                stacklevel=2,
-            )
+            except Exception as e:
+                warnings.warn(
+                    f"Found {macos_db} but could not open it: {e}\n"
+                    "This is usually a permissions issue. Grant Full Disk Access to your\n"
+                    "Terminal (or Python/Jupyter) in:\n"
+                    "  System Settings → Privacy & Security → Full Disk Access",
+                    stacklevel=2,
+                )
 
     return backups
 
