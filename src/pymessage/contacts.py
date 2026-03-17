@@ -3,6 +3,7 @@
 import sqlite3
 from pathlib import Path
 
+from pymessage.db import _locate_in_manifest
 from pymessage.utils import normalize_phone_number
 
 # macOS AddressBook location
@@ -102,7 +103,18 @@ def _load_macos_contacts() -> dict[str, str]:
 def _load_iphone_contacts(backup_root: Path) -> dict[str, str]:
     """Load contacts from an iPhone backup's AddressBook.sqlitedb."""
     lookup: dict[str, str] = {}
-    ab_path = backup_root / _IPHONE_AB_PATH
+
+    # Try Manifest.db lookup first
+    try:
+        ab_path = _locate_in_manifest(
+            backup_root, "HomeDomain", "Library/AddressBook/AddressBook.sqlitedb"
+        )
+    except ValueError:
+        return lookup  # encrypted backup — no contacts available
+
+    if ab_path is None:
+        # Fall back to hardcoded SHA-1 hash for backups without a manifest
+        ab_path = backup_root / _IPHONE_AB_PATH
 
     if not ab_path.exists():
         return lookup

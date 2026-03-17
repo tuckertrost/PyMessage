@@ -1,11 +1,12 @@
 """Tests for pymessage.db module."""
 
+import sqlite3
 from pathlib import Path
 
 import pytest
 
 from pymessage.backups import Backup
-from pymessage.db import ChatDatabase, locate_chat_db, validate_db_params
+from pymessage.db import ChatDatabase, _locate_in_manifest, locate_chat_db, validate_db_params
 
 
 class TestChatDatabase:
@@ -168,3 +169,79 @@ class TestLocateChatDb:
         """Test that returned path is absolute."""
         result = locate_chat_db(mock_backup.path)
         assert result.is_absolute()
+
+    def test_uses_manifest_when_present(self, mock_backup: Backup):
+        """locate_chat_db() uses Manifest.db when it exists."""
+        result = locate_chat_db(mock_backup.path)
+        # mock_backup has Manifest.db — result should be the file from manifest lookup
+        assert result.name == "3d0d7e5fb2ce288813306e4d4636395e047a3d28"
+        assert result.exists()
+
+    def test_falls_back_to_hash_without_manifest(self, mock_backup: Backup):
+        """locate_chat_db() falls back to hardcoded hash when no Manifest.db."""
+        (mock_backup.path / "Manifest.db").unlink()
+        result = locate_chat_db(mock_backup.path)
+        assert result.name == "3d0d7e5fb2ce288813306e4d4636395e047a3d28"
+        assert result.exists()
+
+    def test_raises_on_encrypted_backup(self, tmp_path: Path):
+        """locate_chat_db() raises ValueError for encrypted backups."""
+        backup_dir = tmp_path / "backup"
+        backup_dir.mkdir()
+        (backup_dir / "Manifest.db").write_bytes(b"not valid sqlite data")
+
+        with pytest.raises(ValueError, match="encrypted"):
+            locate_chat_db(backup_dir)
+
+    def test_error_mentions_unencrypted(self, tmp_path: Path):
+        """FileNotFoundError message mentions 'unencrypted' when chat.db is missing."""
+        empty_backup = tmp_path / "empty_backup"
+        empty_backup.mkdir()
+
+        with pytest.raises(FileNotFoundError, match="unencrypted"):
+            locate_chat_db(empty_backup)
+
+
+class TestLocateInManifest:
+    """Tests for _locate_in_manifest helper."""
+
+    def _make_manifest(self, backup_path: Path, file_id: str, domain: str, relative_path: str) -> None:
+        """Create a minimal Manifest.db with one Files entry."""
+        conn = sqlite3.connect(backup_path / "Manifest.db")
+        conn.execute(
+            "CREATE TABLE Files (fileID TEXT PRIMARY KEY, domain TEXT, relativePath TEXT, flags INTEGER, file BLOB)"
+        )
+        conn.execute(
+            "INSERT INTO Files VALUES (?, ?, ?, ?, ?)",
+            (file_id, domain, relative_path, 1, None),
+        )
+        conn.commit()
+        conn.close()
+
+    def test_returns_path_when_found(self, tmp_path: Path):
+        """Returns the correct hash path when the file is in Manifest.db."""
+        file_id = "3d0d7e5fb2ce288813306e4d4636395e047a3d28"
+        self._make_manifest(tmp_path, file_id, "HomeDomain", "Library/SMS/sms.db")
+
+        result = _locate_in_manifest(tmp_path, "HomeDomain", "Library/SMS/sms.db")
+
+        assert result == tmp_path / "3d" / file_id
+
+    def test_returns_none_when_no_manifest(self, tmp_path: Path):
+        """Returns None when Manifest.db does not exist."""
+        result = _locate_in_manifest(tmp_path, "HomeDomain", "Library/SMS/sms.db")
+        assert result is None
+
+    def test_returns_none_when_file_not_in_manifest(self, tmp_path: Path):
+        """Returns None when Manifest.db exists but has no matching row."""
+        self._make_manifest(tmp_path, "aabbcc", "HomeDomain", "Library/Other/file.db")
+
+        result = _locate_in_manifest(tmp_path, "HomeDomain", "Library/SMS/sms.db")
+        assert result is None
+
+    def test_raises_on_encrypted_manifest(self, tmp_path: Path):
+        """Raises ValueError when Manifest.db exists but cannot be read as SQLite."""
+        (tmp_path / "Manifest.db").write_bytes(b"BINARYencryptedgibberish!@#$")
+
+        with pytest.raises(ValueError, match="encrypted"):
+            _locate_in_manifest(tmp_path, "HomeDomain", "Library/SMS/sms.db")

@@ -223,6 +223,27 @@ def mock_backup(tmp_path: Path, mock_chat_db: Path) -> Backup:
     chat_db_path = chat_db_dir / "3d0d7e5fb2ce288813306e4d4636395e047a3d28"
     shutil.copy(mock_chat_db, chat_db_path)
 
+    # Create Manifest.db — the standard iTunes backup index (present on both
+    # Windows and macOS). Maps fileID (SHA-1 hash) to domain + relativePath.
+    manifest_db_path = backup_root / "Manifest.db"
+    m_conn = sqlite3.connect(manifest_db_path)
+    m_conn.execute(
+        "CREATE TABLE Files "
+        "(fileID TEXT PRIMARY KEY, domain TEXT, relativePath TEXT, flags INTEGER, file BLOB)"
+    )
+    m_conn.execute(
+        "INSERT INTO Files VALUES (?, ?, ?, ?, ?)",
+        (
+            "3d0d7e5fb2ce288813306e4d4636395e047a3d28",
+            "HomeDomain",
+            "Library/SMS/sms.db",
+            1,
+            None,
+        ),
+    )
+    m_conn.commit()
+    m_conn.close()
+
     return Backup(
         type="iphone",
         path=backup_root,

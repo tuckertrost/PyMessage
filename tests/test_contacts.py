@@ -286,3 +286,52 @@ class TestBuildContactsLookup:
         )
         lookup = build_contacts_lookup(backup)
         assert lookup == {}
+
+
+class TestLoadIphoneContactsManifest:
+    """Tests for _load_iphone_contacts() Manifest.db integration."""
+
+    def _make_addressbook_db(self, path: Path) -> None:
+        """Write a minimal AddressBook SQLite database to the given path."""
+        conn = sqlite3.connect(path)
+        conn.executescript("""
+            CREATE TABLE ABPerson (
+                ROWID INTEGER PRIMARY KEY, First TEXT, Last TEXT, Nickname TEXT
+            );
+            CREATE TABLE ABMultiValue (
+                record_id INTEGER, property INTEGER, value TEXT
+            );
+        """)
+        conn.execute("INSERT INTO ABPerson VALUES (1, 'Alice', 'Smith', NULL)")
+        conn.execute("INSERT INTO ABMultiValue VALUES (1, 3, '+12345678900')")
+        conn.commit()
+        conn.close()
+
+    def test_uses_manifest_when_present(self, tmp_path: Path):
+        """_load_iphone_contacts() finds AddressBook via Manifest.db lookup."""
+        ab_hash = "31bb7ba8914766d4ba40d6dfb6113c8b614be442"
+        ab_dir = tmp_path / ab_hash[:2]
+        ab_dir.mkdir()
+        self._make_addressbook_db(ab_dir / ab_hash)
+
+        # Create Manifest.db pointing to the AddressBook
+        manifest_conn = sqlite3.connect(tmp_path / "Manifest.db")
+        manifest_conn.execute(
+            "CREATE TABLE Files (fileID TEXT PRIMARY KEY, domain TEXT, relativePath TEXT, flags INTEGER, file BLOB)"
+        )
+        manifest_conn.execute(
+            "INSERT INTO Files VALUES (?, ?, ?, ?, ?)",
+            (ab_hash, "HomeDomain", "Library/AddressBook/AddressBook.sqlitedb", 1, None),
+        )
+        manifest_conn.commit()
+        manifest_conn.close()
+
+        lookup = _load_iphone_contacts(tmp_path)
+        assert lookup.get("+12345678900") == "Alice Smith"
+
+    def test_encrypted_backup_returns_empty(self, tmp_path: Path):
+        """_load_iphone_contacts() returns {} without raising for encrypted backups."""
+        (tmp_path / "Manifest.db").write_bytes(b"BINARYencryptedgibberish!@#$")
+
+        lookup = _load_iphone_contacts(tmp_path)
+        assert lookup == {}

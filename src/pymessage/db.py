@@ -97,11 +97,54 @@ def validate_db_params(backup) -> Path:
     )
 
 
-def locate_chat_db(backup_path: Path) -> Path:
-    """Locate chat.db within iPhone backup using known SHA-1 path.
+def _locate_in_manifest(backup_path: Path, domain: str, relative_path: str) -> Path | None:
+    """Look up a file in Manifest.db and return its hash path within the backup.
 
-    The chat.db file is always at a fixed location within iPhone backups:
-    backup_root/3d/3d0d7e5fb2ce288813306e4d4636395e047a3d28
+    Manifest.db is the SQLite index iTunes writes to every backup directory
+    (on both Windows and macOS). It maps each file's SHA-1 hash to its original
+    domain and relative path on the device.
+
+    Args:
+        backup_path: Root directory of the iPhone backup.
+        domain: iTunes domain (e.g. "HomeDomain").
+        relative_path: File path relative to domain root (e.g. "Library/SMS/sms.db").
+
+    Returns:
+        Full path to the hashed file within the backup, or None if Manifest.db
+        does not exist or the file has no entry in it.
+
+    Raises:
+        ValueError: If Manifest.db exists but cannot be read as a SQLite
+            database, which indicates the backup is encrypted.
+    """
+    manifest = backup_path / "Manifest.db"
+    if not manifest.exists():
+        return None
+    try:
+        conn = sqlite3.connect(manifest)
+        row = conn.execute(
+            "SELECT fileID FROM Files WHERE domain = ? AND relativePath = ?",
+            (domain, relative_path),
+        ).fetchone()
+        conn.close()
+    except sqlite3.DatabaseError as exc:
+        raise ValueError(
+            "This backup appears to be encrypted. Disable backup encryption in "
+            "iTunes (Windows) or Finder (macOS) under the device's backup settings "
+            "and create a new unencrypted backup."
+        ) from exc
+    if row is None:
+        return None
+    file_id = row[0]
+    return backup_path / file_id[:2] / file_id
+
+
+def locate_chat_db(backup_path: Path) -> Path:
+    """Locate chat.db within an iPhone backup directory.
+
+    Queries Manifest.db first (the standard iTunes backup index present on
+    both Windows and macOS), then falls back to the known SHA-1 hash path for
+    older backups that lack a manifest.
 
     Args:
         backup_path: Root directory of iPhone backup.
@@ -110,19 +153,25 @@ def locate_chat_db(backup_path: Path) -> Path:
         Absolute path to chat.db file.
 
     Raises:
-        FileNotFoundError: If chat.db not found at expected location.
+        ValueError: If the backup is encrypted (Manifest.db cannot be read).
+        FileNotFoundError: If chat.db cannot be found at any known location.
 
     Examples:
         >>> db_path = locate_chat_db(Path("/path/to/backup"))
         >>> print(db_path)
         /path/to/backup/3d/3d0d7e5fb2ce288813306e4d4636395e047a3d28
     """
-    chat_db_path = backup_path / CHAT_DB_HASH_PATH
+    # Manifest.db lookup (preferred — gives clear encrypted-backup errors)
+    path = _locate_in_manifest(backup_path, "HomeDomain", "Library/SMS/sms.db")
+    if path is not None and path.exists():
+        return path
 
-    if not chat_db_path.exists():
-        raise FileNotFoundError(
-            f"chat.db not found at expected location: {chat_db_path}. "
-            f"Ensure this is a valid iPhone backup directory."
-        )
+    # Fallback: hardcoded SHA-1 path for backups without Manifest.db
+    path = backup_path / CHAT_DB_HASH_PATH
+    if path.exists():
+        return path
 
-    return chat_db_path
+    raise FileNotFoundError(
+        f"chat.db not found in backup: {backup_path}. "
+        "Ensure this is a valid, unencrypted iPhone backup."
+    )
