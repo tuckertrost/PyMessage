@@ -36,13 +36,13 @@ print(df.head())
 ## Installation
 
 ```bash
-pip install git+https://github.com/tuckertrostbyui/PyMessage.git
+pip install git+https://github.com/tuckertrost/PyMessage.git
 ```
 
 Or with uv:
 
 ```bash
-uv pip install git+https://github.com/tuckertrostbyui/PyMessage.git
+uv pip install git+https://github.com/tuckertrost/PyMessage.git
 ```
 
 ## Requirements
@@ -59,4 +59,4 @@ uv pip install git+https://github.com/tuckertrostbyui/PyMessage.git
 
 ## GitHub
 
-Visit the [PyMessage GitHub repository](https://github.com/tuckertrostbyui/PyMessage) for source code, issues, and contributions.
+Visit the [PyMessage GitHub repository](https://github.com/tuckertrost/PyMessage) for source code, issues, and contributions.

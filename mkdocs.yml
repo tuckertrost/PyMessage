@@ -1,5 +1,5 @@
 site_name: PyMessage Documentation
-site_url: https://tuckertrostbyui.github.io/PyMessage
+site_url: https://tuckertrost.github.io/PyMessage
 theme:
   name: material
   icon:
@@ -62,7 +62,7 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://www.github.com/tuckertrostbyui
+      link: https://www.github.com/tuckertrost
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/tuckertrost
 
